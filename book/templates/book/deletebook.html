@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="post">
+    <h5>Are sure want to delete the Book?</h5>
+    {{book}}
+    {% csrf_token%}
+    <input type="submit">
+</form>
+</body>
+</html>

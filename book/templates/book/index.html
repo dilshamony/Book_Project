@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Welcome {{request.user}}</h1>
+<a href="{%url 'list'%}">List All Books</a><br>
+<a href="{%url 'createbook'%}">Create Book</a><br>
+<a href="{%url 'signout'%}">Logout</a>
+</body>
+</html>
