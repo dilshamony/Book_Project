@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import create_book,list_all_book,book_detail,delete_book,edit_book,registration,login_user,signout,\
-    BookList,BookCreate,BookDetail,BookUpdate,DeleteBook
+    BookList,BookCreate,BookDetail,BookUpdate,DeleteBook,ListBook,CreateBook,DetailBook,UpdateBook,BookDelete
 
 urlpatterns = [
     path("bookcreate",create_book,name="createbook"),
@@ -31,5 +31,10 @@ urlpatterns = [
     path("createbook",BookCreate.as_view(),name="bookcreate"),
     path("books/<int:pk>",BookDetail.as_view(),name="bookdetail"),
     path("books/edit/<int:pk>",BookUpdate.as_view(),name="bookedit"),
-    path("deletebook/<int:pk>",DeleteBook.as_view(),name="bookdelete")
+    path("deletebook/<int:pk>",DeleteBook.as_view(),name="bookdelete"),
+    path("tbooks",ListBook.as_view(),name="tbooks"),
+    path("tcreatebook", CreateBook.as_view(), name="tbookcreate"),
+    path("tbooks/<int:pk>", DetailBook.as_view(), name="tbookdetail"),
+    path("tbooks/edit/<int:pk>", UpdateBook.as_view(), name="tbookedit"),
+    path("tdeletebook/<int:pk>", BookDelete.as_view(), name="tbookdelete"),
 ]

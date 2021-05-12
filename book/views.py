@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate,login,logout
 from .decorators import login_required,admin_only
 
 #Class Base View
-from django.views.generic import ListView,CreateView,DetailView,UpdateView,DeleteView
+from django.views.generic import ListView,CreateView,DetailView,UpdateView,DeleteView,TemplateView
 from django.urls import reverse_lazy,reverse
 
 # Create your views here.
@@ -206,10 +206,100 @@ class BookUpdate(UpdateView):
     template_name = "book/editbook.html"
     success_url = reverse_lazy("books")
 
-
 #DELETE BOOK
 class DeleteBook(DeleteView):
     model = Book
     template_name = "book/deletebook.html"
     context_object_name = "books"
     success_url = reverse_lazy("books")
+
+
+
+#                 CUSTOMIZATION
+#---------------------------------------------------
+
+#LIST
+class ListBook(TemplateView):
+    model=Book
+    template_name = "book/listallbooks.html"
+    context={}
+    def get(self,request,*args,**kwargs):
+        books=self.model.objects.all()
+        print(books)
+        self.context["books"]=books
+        return render(request,self.template_name,self.context)
+
+#CREATE
+class CreateBook(TemplateView):
+    model=Book
+    template_name = "book/bookcreate.html"
+    context={}
+    form_class=BookCreateForm
+    def get(self,request,*args,**kwargs):
+        self.context["form"]=self.form_class()
+        return render(request,self.template_name,self.context)
+    def post(self,request):
+        form= self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("tbooks")
+        else:
+            self.context["form"]=form
+            return render(request, self.template_name, self.context)
+
+
+class ObjectMixin(object):
+    model=None
+    def get_object(self,id):
+        return self.model.objects.get(id=id)
+
+#DETAIL
+class DetailBook(TemplateView):
+    model=Book
+    template_name = "book/bookdetail.html"
+    context={}
+    def get_object(self,id):
+        return self.model.objects.get(id=id)
+    def get(self,request,*args,**kwargs):
+        print(kwargs)
+        id=kwargs.get("pk")
+        book=self.get_object(id)
+        self.context["book"]=book
+        return render(request,self.template_name,self.context)
+
+#UPDATE
+class UpdateBook(TemplateView):
+    model=Book
+    template_name = "book/editbook.html"
+    form_class=BookCreateForm
+    context={}
+    lookup=0
+    def get_object(self,id):
+        return self.model.objects.get(id=id)
+    def get(self,request,*args,**kwargs):
+        self.lookup=kwargs.get("pk")
+        book = self.get_object(self.lookup)
+        form=self.form_class(instance=book)
+        self.context["form"]=form
+        return render(request,self.template_name,self.context)
+    def post(self,request,**kwargs):
+        self.lookup=kwargs.get("pk")
+        book=self.get_object(self.lookup)
+        form=self.form_class(instance=book,data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("tbooks")
+        else:
+            self.context["form"]=form
+            return render(request,self.template_name,self.context)
+
+#DELETE
+class BookDelete(TemplateView):
+    model=Book
+    def get_object(self,id=id):
+        return self.model.objects.get(id=id)
+    def get(self,request,*args,**kwargs):
+        id=kwargs.get("pk")
+        book=self.get_object(id)
+        book.delete()
+        return redirect("tbooks")
