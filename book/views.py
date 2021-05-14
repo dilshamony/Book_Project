@@ -254,12 +254,12 @@ class ObjectMixin(object):
         return self.model.objects.get(id=id)
 
 #DETAIL
-class DetailBook(TemplateView):
+class DetailBook(TemplateView,ObjectMixin):
     model=Book
     template_name = "book/bookdetail.html"
     context={}
-    def get_object(self,id):
-        return self.model.objects.get(id=id)
+#    def get_object(self,id):
+#        return self.model.objects.get(id=id)
     def get(self,request,*args,**kwargs):
         print(kwargs)
         id=kwargs.get("pk")
@@ -268,14 +268,14 @@ class DetailBook(TemplateView):
         return render(request,self.template_name,self.context)
 
 #UPDATE
-class UpdateBook(TemplateView):
+class UpdateBook(TemplateView,ObjectMixin):
     model=Book
     template_name = "book/editbook.html"
     form_class=BookCreateForm
     context={}
     lookup=0
-    def get_object(self,id):
-        return self.model.objects.get(id=id)
+#    def get_object(self,id):
+#        return self.model.objects.get(id=id)
     def get(self,request,*args,**kwargs):
         self.lookup=kwargs.get("pk")
         book = self.get_object(self.lookup)
@@ -294,10 +294,10 @@ class UpdateBook(TemplateView):
             return render(request,self.template_name,self.context)
 
 #DELETE
-class BookDelete(TemplateView):
+class BookDelete(TemplateView,ObjectMixin):
     model=Book
-    def get_object(self,id=id):
-        return self.model.objects.get(id=id)
+#    def get_object(self,id=id):
+#        return self.model.objects.get(id=id)
     def get(self,request,*args,**kwargs):
         id=kwargs.get("pk")
         book=self.get_object(id)
